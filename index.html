@@ -1,89 +1,555 @@
 ---
-layout: default
+layout: project
 ---
-<div class="search-container">
-  <input type="text" id="search-input" placeholder="search blog posts..." style="width: 90%;
-    height: 35px;
-    background-color: rgba(227,231,236,.2);
-    line-height: 35px;
-    margin-top: 20px;
-    padding:10px 16px;
-    border: 1px solid #c0c0c0;
-    font-size: 16px;
-    border-radius: 17px;
-    outline: none;
-    box-sizing: border-box;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);">
-  <ul id="results-container"></ul>
+
+<style>
+  /* ===== Project Page Styles ===== */
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 60px 20px 50px;
+    text-align: center;
+    margin: -40px -20px 0 -20px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 auto 18px;
+    max-width: 800px;
+    color: #fff;
+  }
+  .hero .authors {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #ccd6e0;
+    max-width: 720px;
+    margin: 0 auto 8px;
+  }
+  .hero .authors strong { color: #fff; }
+  .hero .affiliations {
+    font-size: 0.82rem;
+    color: #8fa4b8;
+    margin-bottom: 24px;
+  }
+  .hero .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hero .buttons a {
+    display: inline-block;
+    padding: 10px 24px;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .hero .buttons a:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: #fff;
+    color: #fff;
+  }
+
+  /* Sections */
+  .section {
+    padding: 48px 0 32px;
+  }
+  .section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .section p {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: #374151;
+  }
+
+  /* Teaser image */
+  .teaser-img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  /* Stat boxes */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .stat-box {
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: 10px;
+    padding: 20px 28px;
+    text-align: center;
+    min-width: 160px;
+    flex: 1;
+    max-width: 200px;
+  }
+  .stat-box .stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #3730a3;
+    display: block;
+  }
+  .stat-box .stat-label {
+    font-size: 0.82rem;
+    color: #6366f1;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Pipeline + examples images */
+  .benchmark-img {
+    display: block;
+    max-width: 100%;
+    margin: 24px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  /* Results table */
+  .results-table-wrapper {
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .results-table th {
+    background: #1e293b;
+    color: #fff;
+    padding: 10px 12px;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #334155;
+  }
+  .results-table th:first-child,
+  .results-table td:first-child {
+    text-align: left;
+  }
+  .results-table td {
+    padding: 8px 12px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+  }
+  .results-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+  }
+  .results-table tbody tr:hover {
+    background: #eef2ff;
+  }
+  .results-table .section-header td {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: #334155;
+    padding: 10px 12px;
+    border-bottom: 2px solid #cbd5e1;
+  }
+  .results-table .best-row td {
+    background: #fef3c7;
+    font-weight: 600;
+  }
+  .results-table .human-row td {
+    background: #ecfdf5;
+    font-weight: 700;
+    color: #065f46;
+  }
+  .results-table .random-row td {
+    background: #fef2f2;
+    color: #991b1b;
+    font-style: italic;
+  }
+
+  /* Findings */
+  .finding {
+    background: #f8fafc;
+    border-left: 4px solid #6366f1;
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .finding h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px;
+    line-height: 1.5;
+  }
+  .finding p {
+    margin: 8px 0 0;
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.6;
+  }
+  .finding-img {
+    display: block;
+    margin: 16px auto 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.4rem; }
+    .hero { padding: 40px 16px 36px; }
+    .stat-box { min-width: 120px; padding: 14px 16px; }
+    .stat-box .stat-number { font-size: 1.5rem; }
+    .results-table { font-size: 0.75rem; }
+  }
+</style>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <h1>MuseBench: Benchmarking Intent-Level Audiovisual Arts Understanding in MLLMs</h1>
+  <div class="authors">
+    Yuxuan Fan<sup>1</sup>, Gyusik Seo<sup>1</sup>, Jing Hao<sup>4</sup>,
+    <strong>Jaemin Cho</strong><sup>3</sup>,
+    <strong>Mohit Bansal</strong><sup>2</sup>,
+    <strong>Jaehong Yoon</strong><sup>1*</sup>
+  </div>
+  <div class="affiliations">
+    <sup>1</sup>NTU Singapore &nbsp;&middot;&nbsp;
+    <sup>2</sup>UNC-Chapel Hill &nbsp;&middot;&nbsp;
+    <sup>3</sup>Johns Hopkins University &nbsp;&middot;&nbsp;
+    <sup>4</sup>The University of Hong Kong
+  </div>
+  <div class="buttons">
+    <a href="#">Paper</a>
+    <a href="#">Code</a>
+    <a href="#">Dataset</a>
+    <a href="#">Leaderboard</a>
+  </div>
 </div>
 
-<!--script src="https://unpkg.com/simple-jekyll-search/dest/simple-jekyll-search.min.js"></script-->
-<script src="{{ site.baseurl }}/js/simple-jekyll-search.min.js"></script>
-
-<script>
-	window.simpleJekyllSearch = new SimpleJekyllSearch({
-	searchInput: document.getElementById('search-input'),
-	resultsContainer: document.getElementById('results-container'),
-	json: '{{ site.baseurl }}/search.json',
-	searchResultTemplate: '<li><a href="{url}?query={query}" title="{desc}">{title}</a></li>',
-	noResultsText: 'No results found',
-	limit: 10,
-	fuzzy: false,
-	exclude: ['Welcome']
-  })
-</script>
- 
-{% if site.posts.size == 0 %}
-  <h2>No post found</h2>
-{% endif %}
-
-<div class="posts">
-  {% for post in paginator.posts %}
-  {% unless post.draft %}
-    <article class="post">
-      <h1>
-        <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
-      </h1>
-
-      <div class="meta">
-        <span class="date">
-          {{ post.date | date: "%Y-%m-%d" }}
-        </span>
-
-        <ul class="tag">
-          {% for tag in post.tags %}
-          <li>
-            <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
-              {{ tag }}
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <div class="entry">
-        {{ post.excerpt | truncate: 200 }}
-      </div>
-
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
-  {% endunless %}
-  {% endfor %}
+<!-- ===== ABSTRACT ===== -->
+<div class="section">
+  <h2>Abstract</h2>
+  <p>
+    Audiovisual arts encompass diverse creative disciplines, including cinema, visual arts, stage performance, and game design, where artistic meaning arises from deliberate combinations of visual, auditory, and narrative elements. True artistic understanding extends beyond recognizing what is depicted to reasoning about <em>why</em> it is expressed through particular creative choices. Despite the strong progress of multimodal large language models (MLLMs), this critical aspect of artistic understanding remains underexplored, as existing benchmarks largely measure perceptual recognition while overlooking reasoning about creative intent. To address this gap, we introduce <strong>MuseBench</strong>, a comprehensive benchmark designed to evaluate MLLMs on nuanced artistic understanding. It comprises 4,016 questions spanning cinematic arts, static visual arts, stage performing arts, and game arts, distilled from over 10K candidate video essays that pair professional commentary with visual demonstration. Comprehensive zero-shot evaluation of 28 state-of-the-art MLLMs reveals that even the best-performing model achieves only 48.29% accuracy, substantially below human expert performance of 87.18%.
+  </p>
 </div>
 
-<div class="pagination">
-  {% if paginator.previous_page %}
-    <span class="prev">
-      <a href="{{ site.baseurl }}{{ paginator.previous_page_path }}" class="prev">
-        ← 上一页
-      </a>
-    </span>
-  {% endif %}
-  {% if paginator.next_page %}
-    <span class="next">
-      <a href="{{ site.baseurl}}{{ paginator.next_page_path }}" class="next">
-        下一页 →
-      </a>
-    </span>
-  {% endif %}
+<!-- ===== TEASER ===== -->
+<div class="section" style="padding-top: 0;">
+  <img src="{{ site.baseurl }}/images/intro_v7.png" alt="MuseBench Teaser" class="teaser-img">
+</div>
+
+<!-- ===== BENCHMARK OVERVIEW ===== -->
+<div class="section">
+  <h2>Benchmark Overview</h2>
+  <div class="stats-row">
+    <div class="stat-box">
+      <span class="stat-number">4,016</span>
+      <span class="stat-label">Questions</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">4</span>
+      <span class="stat-label">Categories</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">11</span>
+      <span class="stat-label">Sub-domains</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">28</span>
+      <span class="stat-label">MLLMs Evaluated</span>
+    </div>
+  </div>
+  <img src="{{ site.baseurl }}/images/pipeline_v3.png" alt="MuseBench Pipeline" class="benchmark-img">
+  <img src="{{ site.baseurl }}/images/main_examplesv2.png" alt="MuseBench Examples" class="benchmark-img">
+</div>
+
+<!-- ===== RESULTS ===== -->
+<div class="section">
+  <h2>Results</h2>
+  <p>Zero-shot evaluation across 28 MLLMs. ACC = Accuracy, CAA = Category-Averaged Accuracy, EM = Exact Match.</p>
+  <div class="results-table-wrapper">
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Modality</th>
+          <th>ACC</th>
+          <th>CAA</th>
+          <th>EM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Human -->
+        <tr class="human-row">
+          <td>Human Expert</td>
+          <td>V+A+T</td>
+          <td>87.18</td>
+          <td>90.98</td>
+          <td>78.00</td>
+        </tr>
+        <!-- Proprietary -->
+        <tr class="section-header"><td colspan="5">Proprietary Models</td></tr>
+        <tr class="best-row">
+          <td>Claude-4.6-Opus</td>
+          <td>V+T</td>
+          <td><strong>48.29</strong></td>
+          <td>55.13</td>
+          <td><strong>28.91</strong></td>
+        </tr>
+        <tr>
+          <td>Qwen-3.5-Plus</td>
+          <td>V+T</td>
+          <td>47.27</td>
+          <td><strong>58.52</strong></td>
+          <td>23.21</td>
+        </tr>
+        <tr>
+          <td>Doubao-Seed</td>
+          <td>V+A+T</td>
+          <td>46.11</td>
+          <td>55.00</td>
+          <td>24.22</td>
+        </tr>
+        <tr>
+          <td>GPT-5.4</td>
+          <td>V+A+T</td>
+          <td>44.58</td>
+          <td>50.28</td>
+          <td>25.50</td>
+        </tr>
+        <tr>
+          <td>Gemini-3.1-Pro</td>
+          <td>V+A+T</td>
+          <td>36.89</td>
+          <td>43.77</td>
+          <td>14.88</td>
+        </tr>
+        <tr>
+          <td>Grok-4.1</td>
+          <td>V+A+T</td>
+          <td>20.54</td>
+          <td>13.71</td>
+          <td>8.00</td>
+        </tr>
+        <tr>
+          <td>Kimi-K2.5</td>
+          <td>V+T</td>
+          <td>19.91</td>
+          <td>18.33</td>
+          <td>2.07</td>
+        </tr>
+        <tr>
+          <td>GLM-4.5v</td>
+          <td>V+T</td>
+          <td>17.13</td>
+          <td>5.43</td>
+          <td>8.61</td>
+        </tr>
+        <!-- Open Source General -->
+        <tr class="section-header"><td colspan="5">Open Source General Models</td></tr>
+        <tr>
+          <td>Qwen3.5-397B</td>
+          <td>V+T</td>
+          <td>44.76</td>
+          <td>53.42</td>
+          <td>22.71</td>
+        </tr>
+        <tr>
+          <td>InternVL3-78B</td>
+          <td>V+T</td>
+          <td>37.81</td>
+          <td>47.03</td>
+          <td>13.53</td>
+        </tr>
+        <tr>
+          <td>InternVL3-8B</td>
+          <td>V+T</td>
+          <td>33.07</td>
+          <td>29.49</td>
+          <td>20.30</td>
+        </tr>
+        <tr>
+          <td>Qwen2.5-Omni</td>
+          <td>V+A+T</td>
+          <td>32.70</td>
+          <td>30.71</td>
+          <td>18.18</td>
+        </tr>
+        <tr>
+          <td>MiniCPM-o</td>
+          <td>V+A+T</td>
+          <td>31.34</td>
+          <td>27.05</td>
+          <td>18.90</td>
+        </tr>
+        <tr>
+          <td>Gemma-4-E4B</td>
+          <td>V+A+T</td>
+          <td>27.61</td>
+          <td>28.67</td>
+          <td>9.06</td>
+        </tr>
+        <tr>
+          <td>LLaVA-OV-7B</td>
+          <td>V+T</td>
+          <td>20.41</td>
+          <td>21.24</td>
+          <td>0.50</td>
+        </tr>
+        <!-- Video-Specific -->
+        <tr class="section-header"><td colspan="5">Video-Specific Models</td></tr>
+        <tr>
+          <td>VideoLLaMA3</td>
+          <td>V+A+T</td>
+          <td>27.18</td>
+          <td>26.82</td>
+          <td>9.90</td>
+        </tr>
+        <tr>
+          <td>Video-R1</td>
+          <td>V+T</td>
+          <td>26.73</td>
+          <td>28.41</td>
+          <td>7.21</td>
+        </tr>
+        <tr>
+          <td>VideoRFT</td>
+          <td>V+T</td>
+          <td>26.13</td>
+          <td>26.17</td>
+          <td>8.17</td>
+        </tr>
+        <tr>
+          <td>VideoChat-R1</td>
+          <td>V+T</td>
+          <td>26.08</td>
+          <td>26.49</td>
+          <td>7.77</td>
+        </tr>
+        <tr>
+          <td>Video-XL-2</td>
+          <td>V+T</td>
+          <td>24.17</td>
+          <td>29.91</td>
+          <td>0.11</td>
+        </tr>
+        <tr>
+          <td>VideoLLaMA2</td>
+          <td>V+A+T</td>
+          <td>20.34</td>
+          <td>20.07</td>
+          <td>1.17</td>
+        </tr>
+        <tr>
+          <td>LongVT</td>
+          <td>V+T</td>
+          <td>20.51</td>
+          <td>17.14</td>
+          <td>4.64</td>
+        </tr>
+        <tr>
+          <td>AKS</td>
+          <td>V+T</td>
+          <td>19.31</td>
+          <td>18.99</td>
+          <td>0.00</td>
+        </tr>
+        <tr>
+          <td>Q-Frame</td>
+          <td>V+T</td>
+          <td>18.76</td>
+          <td>9.65</td>
+          <td>8.05</td>
+        </tr>
+        <tr>
+          <td>VideoChat2</td>
+          <td>V+T</td>
+          <td>17.78</td>
+          <td>15.27</td>
+          <td>0.34</td>
+        </tr>
+        <tr>
+          <td>Video-CCAM</td>
+          <td>V+T</td>
+          <td>17.53</td>
+          <td>15.10</td>
+          <td>0.00</td>
+        </tr>
+        <tr>
+          <td>LongVU</td>
+          <td>V+T</td>
+          <td>14.87</td>
+          <td>8.21</td>
+          <td>1.01</td>
+        </tr>
+        <tr>
+          <td>TimeChat</td>
+          <td>V+T</td>
+          <td>14.42</td>
+          <td>7.79</td>
+          <td>0.34</td>
+        </tr>
+        <!-- Random -->
+        <tr class="random-row">
+          <td>Random Baseline</td>
+          <td>-</td>
+          <td>13.55</td>
+          <td>0.02</td>
+          <td>6.04</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== KEY FINDINGS ===== -->
+<div class="section">
+  <h2>Key Findings</h2>
+
+  <div class="finding">
+    <h3>F1: Audiovisual-arts reasoning remains far from saturated</h3>
+    <p>The best proprietary model (Claude-4.6-Opus) reaches 48.29% accuracy, trailing human experts (87.18%) by nearly 39 percentage points. Open-source models lag even further behind, underscoring the difficulty of intent-level artistic reasoning for current MLLMs.</p>
+  </div>
+
+  <div class="finding">
+    <h3>F2: Game arts are a shared weakness</h3>
+    <p>Across all model categories, game arts consistently yield the lowest scores, suggesting that game design reasoning (level design intent, mechanics-narrative interplay, aesthetic systems) is uniquely challenging for MLLMs.</p>
+    <img src="{{ site.baseurl }}/images/performance_summary.png" alt="Performance Summary" class="finding-img" style="max-width:90%;">
+  </div>
+
+  <div class="finding">
+    <h3>F3: Key frames provide limited gains</h3>
+    <p>Video-specific models that rely on key-frame extraction achieve accuracies between 14.42% and 20.51%, showing that sparse frame sampling is insufficient to capture the temporal and contextual cues essential for artistic understanding.</p>
+  </div>
+
+  <div class="finding">
+    <h3>F4: Models select the most salient correct option but miss the rest</h3>
+    <p>High CAA scores paired with low EM scores reveal that models tend to identify the single most obvious correct answer while failing to recognize additional valid options, indicating shallow pattern matching over genuine comprehension.</p>
+  </div>
+
+  <div class="finding">
+    <h3>F5: Modality gain</h3>
+    <p>Models with audio input (V+A+T) do not consistently outperform vision-text-only (V+T) counterparts, suggesting that current audio encoding and cross-modal fusion strategies fail to effectively leverage auditory information for artistic reasoning.</p>
+  </div>
+
+  <div class="finding">
+    <h3>F6: Open-source MLLMs exhibit pronounced first-position bias</h3>
+    <p>Open-source models disproportionately favor answer options in the first position, regardless of correctness. This positional bias inflates accuracy on standard orderings and highlights a systematic vulnerability in multiple-choice reasoning.</p>
+    <img src="{{ site.baseurl }}/images/position_bias.png" alt="Position Bias Analysis" class="finding-img" style="max-width:50%;">
+  </div>
 </div>

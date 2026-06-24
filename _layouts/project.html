@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ site.name }} - {{ site.description }}</title>
+    {% include meta.html %}
+    <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ site.baseurl }}/feed.xml" />
+    <style>
+      /* Project page: override sidebar layout to full width */
+      .wrapper-sidebar { display: none !important; }
+      .wrapper-content { float: none !important; width: 100% !important; }
+      .wrapper-footer-desktop { position: relative !important; }
+      .container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+    </style>
+  </head>
+  <body>
+    <div id="main" role="main" class="wrapper-content">
+      <div class="container">
+        {{ content }}
+      </div>
+    </div>
+
+    <div class="wrapper-footer-desktop" style="display:block;">
+      <footer class="footer">
+        {% include footer.html %}
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,3 +1,7 @@
-# jekyll local file
-.jekyll*
-_site
+.omc/
+.DS_Store
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+*.pyc
